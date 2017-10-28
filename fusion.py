@@ -51,7 +51,7 @@ class Fusion(object):
                 magmin[x] = min(magmin[x], magxyz[x])
         self.magbias = tuple(map(lambda a, b: (a +b)/2, magmin, magmax))
 
-    def update_nomag(self, accel, gyro):    # 3-tuples (x, y, z) for accel, gyro
+    def update_nomag(self, accel, gyro,dt):    # 3-tuples (x, y, z) for accel, gyro
         ax, ay, az = accel                  # Units G (but later normalised)
         gx, gy, gz = (radians(x) for x in gyro) # Units deg/s
         if self.start_time is None:
@@ -112,7 +112,7 @@ class Fusion(object):
         self.roll = degrees(atan2(2.0 * (self.q[0] * self.q[1] + self.q[2] * self.q[3]),
             self.q[0] * self.q[0] - self.q[1] * self.q[1] - self.q[2] * self.q[2] + self.q[3] * self.q[3]))
 
-    def update(self, accel, gyro, mag):     # 3-tuples (x, y, z) for accel, gyro and mag data
+    def update(self, accel, gyro, mag,dt):     # 3-tuples (x, y, z) for accel, gyro and mag data
         mx, my, mz = (mag[x] - self.magbias[x] for x in range(3)) # Units irrelevant (normalised)
         ax, ay, az = accel                  # Units irrelevant (normalised)
         gx, gy, gz = (radians(x) for x in gyro)  # Units deg/s
@@ -199,7 +199,7 @@ class Fusion(object):
 
         # Integrate to yield quaternion
         # deltat = elapsed_micros(self.start_time) / 1000000
-        deltat = 0.005
+        deltat = dt
         self.start_time = time.time()
         q1 += qDot1 * deltat
         q2 += qDot2 * deltat

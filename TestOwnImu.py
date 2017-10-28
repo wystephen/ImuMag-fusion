@@ -26,23 +26,28 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 from fusion import Fusion
 
 import time
+
 # import utime
 
 if __name__ == '__main__':
-    dir_name = '/home/steve/Data/IU/92/'
-    imu_data = np.loadtxt(dir_name+ 'imu.txt',
+    # dir_name = '/home/steve/Data/IU/86/'
+    dir_name = "/home/steve/Code/Mini_IMU/Scripts/IMUWB/91/"
+    imu_data = np.loadtxt(dir_name + 'imu.txt',
                           delimiter=',')
 
     fuse = Fusion()
 
-    attitude = np.zeros([imu_data.shape[0],3])
+    attitude = np.zeros([imu_data.shape[0], 3])
 
     for i in range(imu_data.shape[0]):
-        fuse.update(imu_data[i,1:4],imu_data[i,4:7],imu_data[i,7:10])
+        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
+        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
+        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
+        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
+        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
         # time.sleep(0.005)
         if i % 200 == 0:
             print("attitude:{:7.3f} {:7.3f} {:7.3f}".format(
@@ -50,19 +55,17 @@ if __name__ == '__main__':
                 fuse.pitch,
                 fuse.roll
             ))
-        attitude[i,0] = fuse.heading
-        attitude[i,1] = fuse.pitch
-        attitude[i,2] = fuse.roll
+        attitude[i, 0] = fuse.heading
+        attitude[i, 1] = fuse.pitch
+        attitude[i, 2] = fuse.roll
 
-
-    imu_data[:,7:10] = attitude/180.0*np.pi
-    np.savetxt(dir_name+'imu_att.txt',imu_data,delimiter=',')
-
+    imu_data[:, 7:10] = attitude / 180.0 * np.pi
+    np.savetxt(dir_name + 'imu_att.txt', imu_data, delimiter=',')
 
     plt.figure()
     plt.title('attitude')
     for i in range(attitude.shape[1]):
-        plt.plot(attitude[:,i],'-+',label=str(i))
+        plt.plot(attitude[:, i], '-+', label=str(i))
     plt.grid()
     plt.legend()
     plt.show()
