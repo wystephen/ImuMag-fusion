@@ -35,7 +35,7 @@ def return_false_func():
     return False
 
 if __name__ == '__main__':
-    dir_name = '/home/steve/Data/IU/86/'
+    dir_name = '/home/steve/Data/IU/92/'
 
 
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     for i in range(imu_data.shape[0]):
         bb_times = 5
         if i is 0:
-            bb_times = 1000
+            bb_times = 100
         for j in range(bb_times):
             fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.005/float(bb_times))
 
@@ -74,7 +74,7 @@ if __name__ == '__main__':
     attitude[:200,:]  = attitude[300,:]
     imu_data[:, 7:10] = attitude / 180.0 * np.pi
     np.savetxt(dir_name + 'imu_att.txt', imu_data, delimiter=',')
-
+    print('mag bias :',fuse.magbias)
     plt.figure()
     plt.title('attitude')
     # for i in range(attitude.shape[1]):
@@ -82,4 +82,14 @@ if __name__ == '__main__':
     plt.plot(attitude[:,0],'-+',label='heading')
     plt.grid()
     plt.legend()
+
+    ax = plt.subplot(111,projection='polar')
+    all_index = np.zeros_like(attitude[:,0])
+    all_index[0] = 1
+    for i in range(1,all_index.shape[0]):
+        all_index[i] = all_index[i-1] + 1
+    ax.plot(attitude[:,0],all_index,'-+')
+    # ax.gird()
+
+
     plt.show()
