@@ -50,6 +50,11 @@ class Fusion(object):
                 magmax[x] = max(magmax[x], magxyz[x])
                 magmin[x] = min(magmin[x], magxyz[x])
         self.magbias = tuple(map(lambda a, b: (a +b)/2, magmin, magmax))
+    def own_calibrate(self,data):
+        self.magbias = [0,0,0]
+        for i in range(3):
+            self.magbias[i] = (data[:,i].max()+data[:,i].min())/2.0
+
 
     def update_nomag(self, accel, gyro,dt):    # 3-tuples (x, y, z) for accel, gyro
         ax, ay, az = accel                  # Units G (but later normalised)

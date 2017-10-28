@@ -31,21 +31,31 @@ from fusion import Fusion
 import time
 
 # import utime
+def return_false_func():
+    return False
 
 if __name__ == '__main__':
-    # dir_name = '/home/steve/Data/IU/86/'
-    dir_name = "/home/steve/Code/Mini_IMU/Scripts/IMUWB/91/"
+    dir_name = '/home/steve/Data/IU/86/'
+
+
+
+    # dir_name = "/home/steve/Code/Mini_IMU/Scripts/IMUWB/91/"
     imu_data = np.loadtxt(dir_name + 'imu.txt',
                           delimiter=',')
 
+    mag_cali_data = np.loadtxt('/home/steve/Data/IU/94/imu.txt',
+                               delimiter=',')
+
     fuse = Fusion()
+
+    fuse.own_calibrate(mag_cali_data[:,7:10])
 
     attitude = np.zeros([imu_data.shape[0], 3])
 
     for i in range(imu_data.shape[0]):
-        bb_times = 100
+        bb_times = 5
         if i is 0:
-            bb_times = 1000000
+            bb_times = 1000
         for j in range(bb_times):
             fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.005/float(bb_times))
 
