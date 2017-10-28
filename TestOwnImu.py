@@ -43,11 +43,13 @@ if __name__ == '__main__':
     attitude = np.zeros([imu_data.shape[0], 3])
 
     for i in range(imu_data.shape[0]):
-        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
-        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
-        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
-        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
-        fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
+        bb_times = 100
+        if i is 0:
+            bb_times = 1000000
+        for j in range(bb_times):
+            fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.005/float(bb_times))
+
+        # fuse.update(imu_data[i, 1:4], imu_data[i, 4:7], imu_data[i, 7:10],0.001)
         # time.sleep(0.005)
         if i % 200 == 0:
             print("attitude:{:7.3f} {:7.3f} {:7.3f}".format(
@@ -59,13 +61,15 @@ if __name__ == '__main__':
         attitude[i, 1] = fuse.pitch
         attitude[i, 2] = fuse.roll
 
+    attitude[:200,:]  = attitude[300,:]
     imu_data[:, 7:10] = attitude / 180.0 * np.pi
     np.savetxt(dir_name + 'imu_att.txt', imu_data, delimiter=',')
 
     plt.figure()
     plt.title('attitude')
-    for i in range(attitude.shape[1]):
-        plt.plot(attitude[:, i], '-+', label=str(i))
+    # for i in range(attitude.shape[1]):
+    #     plt.plot(attitude[:, i], '-+', label=str(i))
+    plt.plot(attitude[:,0],'-+',label='heading')
     plt.grid()
     plt.legend()
     plt.show()
