@@ -33,7 +33,8 @@ import time
 # import utime
 
 if __name__ == '__main__':
-    imu_data = np.loadtxt('/home/steve/Data/IU/92/imu.txt',
+    dir_name = '/home/steve/Data/IU/92/'
+    imu_data = np.loadtxt(dir_name+ 'imu.txt',
                           delimiter=',')
 
     fuse = Fusion()
@@ -52,6 +53,11 @@ if __name__ == '__main__':
         attitude[i,0] = fuse.heading
         attitude[i,1] = fuse.pitch
         attitude[i,2] = fuse.roll
+
+
+    imu_data[:,7:10] = attitude/180.0*np.pi
+    np.savetxt(dir_name+'imu_att.txt',imu_data,delimiter=',')
+
 
     plt.figure()
     plt.title('attitude')
