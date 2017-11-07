@@ -35,7 +35,8 @@ def return_false_func():
     return False
 
 if __name__ == '__main__':
-    dir_name = '/home/steve/Data/IU/92/'
+    # dir_name = '/home/steve/Data/IU/92/'
+    dir_name = '/home/steve/Data/II/16/'
 
 
 
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     imu_data = np.loadtxt(dir_name + 'imu.txt',
                           delimiter=',')
 
-    mag_cali_data = np.loadtxt('/home/steve/Data/IU/94/imu.txt',
+    mag_cali_data = np.loadtxt('/home/steve/Data/II/21/imu.txt',
                                delimiter=',')
 
     fuse = Fusion()
@@ -82,14 +83,18 @@ if __name__ == '__main__':
     plt.plot(attitude[:,0],'-+',label='heading')
     plt.grid()
     plt.legend()
-
-    ax = plt.subplot(111,projection='polar')
-    all_index = np.zeros_like(attitude[:,0])
-    all_index[0] = 1
-    for i in range(1,all_index.shape[0]):
-        all_index[i] = all_index[i-1] + 1
-    ax.plot(attitude[:,0],all_index,'-+')
-    # ax.gird()
+    #
+    # plt.figure()
+    # ax = plt.subplot(111,projection='polar')
+    # all_index = np.zeros_like(attitude[:,0])
+    # all_index[0] = 1
+    # for i in range(1,all_index.shape[0]):
+    #     all_index[i] = all_index[i-1] + 1
+    # ax.plot(
+    #         attitude[:10000,0]*180.0/np.pi,
+    #         all_index[:10000]/np.max(all_index[:10000]),
+    #         '-')
+    # # ax.gird()
 
 
     plt.show()
